@@ -1,0 +1,168 @@
+Create android application. Use attached pptx file as design and functionality guaidance. 
+For LLM setup screen create according user interface with all parameters. Should be compatible with openAI, Groq, LM Studio or local (ollama, llama.cpp, e.t.c.) 
+
+Store all data in json files, use separate files for different data. (questionnare, processed medical data, history of questionnare, chat history and other)
+
+User can submit pdf, text files or image files. 
+Create ai prompt that will parse all information into json with information about disease, medical treatment history and medications submitted. 
+
+On medical tracker create LLM prompt that will create json with up to 12 ( user can extend this) questions, so user could hold his daily questionnare. 
+
+
+Create java file that will call remote llm. 
+Use libtesserract for ocr and pdftotext libraries for information extraction or java library for extraction of text from pdf. 
+
+For Scientific papers use pubmed / pubmed central api
+
+For clinical trials use,you can create interface where user could find the clinical trials himself or use text from his submitted text.: 
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+
+public class EUClinicalTrialsAPI {
+
+    public static void main(String[] args) {
+        try {
+            String query = "test"; // Example parameter
+            String response = searchClinicalTrials(query,1,"","",25);
+        //    System.out.println(response);null
+        ClinicalTrialResponse res = EUClinicalParser.parseResponse(response);
+        System.out.println(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String searchClinicalTrials(String containAll,int page,String containOR,String containNOT) throws Exception {
+        String url = "https://euclinicaltrials.eu/ctis-public-api/search";
+
+        String jsonPayload = """
+            {
+              "pagination": {"page": %s, "size": 25},
+              "sort": {"property": "decisionDate", "direction": "DESC"},
+              "searchCriteria": {
+                "containAll": "%s",
+                "containAny": "%s",
+                "containNot": "%s",
+                "title": null,
+                "number": null,
+                "status": null,
+                "medicalCondition": null,
+                "sponsor": null,
+                "endPoint": null,
+                "productName": null,
+                "productRole": null,
+                "populationType": null,
+                "orphanDesignation": null,
+                "msc": null,
+                "ageGroupCode": null,
+                "therapeuticAreaCode": null,
+                "trialPhaseCode": null,
+                "sponsorTypeCode": null,
+                "gender": null,
+                "eeaStartDateFrom": null,
+                "eeaStartDateTo": null,
+                "eeaEndDateFrom": null,
+                "eeaEndDateTo": null,
+                "protocolCode": null,
+                "rareDisease": null,
+                "pip": null,
+                "haveOrphanDesignation": null,
+                "hasStudyResults": null,
+                "hasClinicalStudyReport": null,
+                "isLowIntervention": null,
+                "hasSeriousBreach": null,
+                "hasUnexpectedEvent": null,
+                "hasUrgentSafetyMeasure": null,
+                "isTransitioned": null,
+                "eudraCtCode": null,
+                "trialRegion": null,
+                "vulnerablePopulation": null,
+                "mscStatus": null
+              }
+            }
+            """.formatted(page,containAll,containOR,containNOT);
+
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonPayload, StandardCharsets.UTF_8))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return response.body();
+    }
+
+    
+    
+    public static String searchClinicalTrials(String containAll,int page,String containOR,String containNOT,int size) throws Exception {
+        String url = "https://euclinicaltrials.eu/ctis-public-api/search";
+
+        String jsonPayload = """
+            {
+              "pagination": {"page": %s, "size": %s},
+              "sort": {"property": "decisionDate", "direction": "DESC"},
+              "searchCriteria": {
+                "containAll": "%s",
+                "containAny": "%s",
+                "containNot": "%s",
+                "title": null,
+                "number": null,
+                "status": null,
+                "medicalCondition": null,
+                "sponsor": null,
+                "endPoint": null,
+                "productName": null,
+                "productRole": null,
+                "populationType": null,
+                "orphanDesignation": null,
+                "msc": null,
+                "ageGroupCode": null,
+                "therapeuticAreaCode": null,
+                "trialPhaseCode": null,
+                "sponsorTypeCode": null,
+                "gender": null,
+                "eeaStartDateFrom": null,
+                "eeaStartDateTo": null,
+                "eeaEndDateFrom": null,
+                "eeaEndDateTo": null,
+                "protocolCode": null,
+                "rareDisease": null,
+                "pip": null,
+                "haveOrphanDesignation": null,
+                "hasStudyResults": null,
+                "hasClinicalStudyReport": null,
+                "isLowIntervention": null,
+                "hasSeriousBreach": null,
+                "hasUnexpectedEvent": null,
+                "hasUrgentSafetyMeasure": null,
+                "isTransitioned": null,
+                "eudraCtCode": null,
+                "trialRegion": null,
+                "vulnerablePopulation": null,
+                "mscStatus": null
+              }
+            }
+            """.formatted(page,size,containAll,containOR,containNOT);
+
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonPayload, StandardCharsets.UTF_8))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return response.body();
+    }
+
+
+    
+}
+

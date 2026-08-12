@@ -1,0 +1,12 @@
+<resources>
+    <style name="Theme.Meditation" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/sage</item>
+        <item name="colorOnPrimary">@color/warm_white</item>
+        <item name="colorSecondary">@color/deep_sage</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/warm_white</item>
+        <item name="android:windowBackground">@color/mist</item>
+    </style>
+</resources>

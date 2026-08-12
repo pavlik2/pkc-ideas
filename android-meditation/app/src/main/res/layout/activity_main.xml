@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screen"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:paddingHorizontal="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="32dp"
+        android:paddingBottom="32dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.16"
+            android:text="@string/eyebrow"
+            android:textAllCaps="true"
+            android:textColor="@color/sage"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/meditation_timer"
+            android:textColor="@color/ink"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:text="@string/meditation_subtitle"
+            android:textColor="@color/muted_ink"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/timer"
+            android:textColor="@color/ink"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/timerCard"
+                android:layout_width="196dp"
+                android:layout_height="112dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/warm_white"
+                app:cardCornerRadius="56dp"
+                app:cardElevation="2dp"
+                app:strokeColor="@color/line"
+                app:strokeWidth="2dp">
+
+                <TextView
+                    android:id="@+id/timerText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/set_timer"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="10:00"
+                    android:textColor="@color/ink"
+                    android:textSize="38sp" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/timerControlButton"
+                style="@style/Widget.Material3.Button.IconButton.Filled"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="12dp"
+                android:contentDescription="@string/start_timer_without_audio"
+                android:text="@string/play_symbol"
+                android:textSize="24sp"
+                app:backgroundTint="@color/deep_sage"
+                app:tooltipText="@string/timer_control_hint" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/timer_help"
+            android:textColor="@color/muted_ink"
+            android:textSize="12sp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            app:cardBackgroundColor="@color/card_white"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/line"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/audio_player"
+                    android:textColor="@color/ink"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/audio_subtitle"
+                    android:textColor="@color/muted_ink"
+                    android:textSize="13sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/selectFolderButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/select_audio_folder"
+                    android:textColor="@color/deep_sage"
+                    app:strokeColor="@color/sage" />
+
+                <TextView
+                    android:id="@+id/folderText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_horizontal"
+                    android:maxLines="2"
+                    android:text="@string/no_folder_selected"
+                    android:textColor="@color/muted_ink"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/trackText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:ellipsize="middle"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/no_track"
+                    android:textColor="@color/ink"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/previousButton"
+                        style="@style/Widget.Material3.Button.IconButton.Outlined"
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:contentDescription="@string/previous"
+                        android:text="@string/previous_symbol"
+                        android:textColor="@color/deep_sage"
+                        android:textSize="18sp"
+                        app:strokeColor="@color/sage" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/playButton"
+                        style="@style/Widget.Material3.Button.IconButton.Filled"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_marginHorizontal="18dp"
+                        android:contentDescription="@string/play"
+                        android:text="@string/play_symbol"
+                        android:textSize="26sp"
+                        app:backgroundTint="@color/sage" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/nextButton"
+                        style="@style/Widget.Material3.Button.IconButton.Outlined"
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:contentDescription="@string/next"
+                        android:text="@string/next_symbol"
+                        android:textColor="@color/deep_sage"
+                        android:textSize="18sp"
+                        app:strokeColor="@color/sage" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/warm_white"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/line"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/alarmSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/play_alarm_at_zero"
+                    android:textColor="@color/ink"
+                    android:textSize="15sp"
+                    app:thumbTint="@color/sage"
+                    app:trackTint="@color/mint" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/selectAlarmButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/select_alarm_audio"
+                    android:textColor="@color/deep_sage"
+                    app:strokeColor="@color/sage" />
+
+                <TextView
+                    android:id="@+id/alarmFileText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="middle"
+                    android:gravity="center_horizontal"
+                    android:maxLines="1"
+                    android:text="@string/no_alarm_selected"
+                    android:textColor="@color/muted_ink"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/volumeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/alarm_volume_default"
+                    android:textColor="@color/ink"
+                    android:textSize="14sp" />
+
+                <SeekBar
+                    android:id="@+id/volumeSeekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="50"
+                    android:progressTint="@color/sage"
+                    android:thumbTint="@color/deep_sage" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_status"
+            android:gravity="center"
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="9dp"
+            android:text="@string/ready"
+            android:textColor="@color/muted_ink"
+            android:textSize="13sp" />
+    </LinearLayout>
+</ScrollView>

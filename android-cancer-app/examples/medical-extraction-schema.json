@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Medical record extraction",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "diseases",
+    "treatments",
+    "medications",
+    "uncertainties",
+    "sourceSummary"
+  ],
+  "properties": {
+    "diseases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "status", "sourceEvidence"],
+        "properties": {
+          "name": {"type": "string"},
+          "status": {"type": ["string", "null"]},
+          "diagnosedDate": {"type": ["string", "null"]},
+          "sourceEvidence": {"type": "string"}
+        }
+      }
+    },
+    "treatments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "status", "sourceEvidence"],
+        "properties": {
+          "name": {"type": "string"},
+          "type": {"type": ["string", "null"]},
+          "startDate": {"type": ["string", "null"]},
+          "endDate": {"type": ["string", "null"]},
+          "status": {"type": ["string", "null"]},
+          "sourceEvidence": {"type": "string"}
+        }
+      }
+    },
+    "medications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "sourceEvidence"],
+        "properties": {
+          "name": {"type": "string"},
+          "dose": {"type": ["string", "null"]},
+          "frequency": {"type": ["string", "null"]},
+          "route": {"type": ["string", "null"]},
+          "status": {"type": ["string", "null"]},
+          "sourceEvidence": {"type": "string"}
+        }
+      }
+    },
+    "uncertainties": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "sourceSummary": {
+      "type": "string"
+    }
+  }
+}

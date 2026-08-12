@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Главы аудиозаписи</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --bg-elevated: #ffffff;
+      --panel: #ffffff;
+      --panel-2: #f7f9fc;
+      --text: #182033;
+      --muted: #667089;
+      --line: #dfe5f0;
+      --accent: #4f6fff;
+      --accent-strong: #3f5cf0;
+      --accent-soft: #eef2ff;
+      --quote-bg: #f8faff;
+      --shadow: 0 10px 30px rgba(25, 40, 75, 0.08);
+      --shadow-soft: 0 4px 14px rgba(25, 40, 75, 0.06);
+      --audio-bg: #edf2f8;
+      --backdrop: rgba(20, 26, 42, 0.42);
+    }
+
+    body.dark {
+      --bg: #0f1728;
+      --bg-elevated: #121c31;
+      --panel: #16223a;
+      --panel-2: #111b2f;
+      --text: #edf3ff;
+      --muted: #9fb0d3;
+      --line: #263552;
+      --accent: #7e95ff;
+      --accent-strong: #98abff;
+      --accent-soft: rgba(126, 149, 255, 0.12);
+      --quote-bg: #101a2c;
+      --shadow: 0 18px 44px rgba(0, 0, 0, 0.35);
+      --shadow-soft: 0 8px 20px rgba(0, 0, 0, 0.24);
+      --audio-bg: #1a2740;
+      --backdrop: rgba(2, 6, 16, 0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .topbar {
+      min-height: 76px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 18px;
+    }
+
+    .title-wrap {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(24px, 2.2vw, 38px);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      overflow-wrap: anywhere;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+.clickable-quote {
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin: -6px -8px 0;
+}
+
+.clickable-quote:hover {
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--bg-elevated);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.18s ease;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .btn.primary:hover {
+      background: var(--accent-strong);
+    }
+
+    .playerbar {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+      padding: 14px 16px;
+    }
+
+    .playerbar-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .player-label {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    audio {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+      background: var(--audio-bg);
+    }
+
+    .main {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .left-panel,
+    .right-panel {
+      min-height: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .left-panel {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
+    }
+
+    .left-header {
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .left-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .left-subtitle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .chapters-list {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 12px;
+      scroll-behavior: smooth;
+    }
+
+    .chapters-list::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .chapters-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .chapters-list::-webkit-scrollbar-thumb {
+      background: rgba(120, 135, 170, 0.35);
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    body.dark .chapters-list::-webkit-scrollbar-thumb {
+      background: rgba(170, 190, 235, 0.26);
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    .chapter {
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: 0.18s ease;
+      display: block;
+    }
+
+    .chapter:hover {
+      background: var(--panel-2);
+      border-color: var(--line);
+    }
+
+    .chapter.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 10px 26px rgba(79, 111, 255, 0.22);
+    }
+
+    .chapter-num {
+      font-size: 13px;
+      font-weight: 800;
+      opacity: 0.92;
+      margin-bottom: 6px;
+    }
+
+    .chapter-label {
+      font-size: 18px;
+      line-height: 1.28;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .chapter-time {
+      font-size: 13px;
+      opacity: 0.88;
+    }
+
+    .right-panel {
+      min-height: 0;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 1fr;
+    }
+
+    .details {
+      min-height: 0;
+      overflow: auto;
+      padding: 22px;
+    }
+
+    .details::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .details::-webkit-scrollbar-thumb {
+      background: rgba(120, 135, 170, 0.28);
+      border-radius: 999px;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .chip {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .details h2 {
+      margin: 0 0 14px;
+      font-size: clamp(28px, 2.6vw, 50px);
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+    }
+
+    .time-range {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .summary {
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--text);
+      max-width: 1100px;
+    }
+
+    .quote-box {
+      margin-top: 22px;
+      max-width: 1100px;
+      background: var(--quote-bg);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px 20px;
+    }
+
+    .quote {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.6;
+    }
+
+    .speaker {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 15px;
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    .details-actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .empty {
+      height: 100%;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      text-align: center;
+      padding: 24px;
+      font-size: 16px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: var(--backdrop);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      z-index: 100;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: min(1100px, 100%);
+      height: min(84vh, 900px);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .modal-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .search-input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+    }
+
+    .transcript {
+      overflow: auto;
+      padding: 18px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      color: var(--text);
+      background: var(--panel);
+    }
+
+    .transcript mark {
+      background: #ffe08a;
+      color: #1d1d1d;
+      padding: 0 2px;
+      border-radius: 3px;
+    }
+
+    body.dark .transcript mark {
+      background: #ffd76a;
+      color: #111;
+    }
+
+    @media (max-width: 980px) {
+      .app {
+        grid-template-rows: auto auto 1fr;
+      }
+
+      .main {
+        grid-template-columns: 1fr;
+      }
+
+      .left-panel {
+        max-height: 38vh;
+      }
+
+      .actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .playerbar-top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        padding: 10px;
+        gap: 10px;
+      }
+
+      .topbar,
+      .playerbar,
+      .left-panel,
+      .right-panel {
+        border-radius: 16px;
+      }
+
+      .title {
+        font-size: 24px;
+      }
+
+      .chapter-label {
+        font-size: 16px;
+      }
+
+      .details {
+        padding: 16px;
+      }
+
+      .details h2 {
+        font-size: 30px;
+      }
+
+      .summary {
+        font-size: 16px;
+      }
+    }
+    
+    
+    
+    
+    
+    /* ===== Better mobile / tablet readability ===== */
+
+@media (max-width: 980px) {
+  html, body {
+    height: auto;
+  }
+
+  body {
+    overflow: auto;
+  }
+
+  .app {
+    height: auto;
+    min-height: 100vh;
+    display: block;
+    padding: 10px;
+  }
+
+  .topbar {
+    min-height: unset;
+    padding: 14px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .title-wrap {
+    min-width: 0;
+  }
+
+  .title {
+    font-size: 24px;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+    min-height: 44px;
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .playerbar {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .playerbar-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .pill {
+    font-size: 12px;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .left-panel,
+  .right-panel {
+    border-radius: 16px;
+  }
+
+  .left-panel {
+    display: block;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .left-header {
+    padding: 14px;
+  }
+
+  .left-title {
+    font-size: 18px;
+  }
+
+  .left-subtitle {
+    font-size: 12px;
+  }
+
+  /* On mobile allow page scroll instead of nested awkward scrolling */
+  .chapters-list {
+    max-height: none;
+    overflow: visible;
+    padding: 10px;
+  }
+
+  .chapter {
+    padding: 12px;
+    border-radius: 14px;
+    margin-bottom: 8px;
+  }
+
+  .chapter-num {
+    font-size: 12px;
+  }
+
+  .chapter-label {
+    font-size: 17px;
+    line-height: 1.3;
+  }
+
+  .chapter-time {
+    font-size: 12px;
+  }
+
+  .right-panel {
+    overflow: visible;
+  }
+
+  .details {
+    overflow: visible;
+    padding: 16px;
+  }
+
+  .meta-row {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .chip {
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+
+  .details h2 {
+    font-size: 30px;
+    line-height: 1.15;
+    margin-bottom: 10px;
+    word-break: break-word;
+  }
+
+  .time-range {
+    font-size: 16px;
+    line-height: 1.4;
+    margin-bottom: 14px;
+  }
+
+  .summary {
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .quote-box {
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .quote {
+    font-size: 18px;
+    line-height: 1.55;
+  }
+
+  .speaker {
+    font-size: 14px;
+  }
+
+  .details-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .modal {
+    padding: 0;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .modal-card {
+    width: 100%;
+    height: 100vh;
+    max-height: none;
+    border-radius: 0;
+    border: none;
+  }
+
+  .modal-header {
+    padding: 14px;
+    gap: 10px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .modal-title {
+    font-size: 28px;
+    line-height: 1.15;
+  }
+
+  .modal-controls {
+    width: 100%;
+  }
+
+  .modal-controls .btn {
+    width: 100%;
+  }
+
+  .search-wrap {
+    padding: 10px 14px;
+  }
+
+  .search-input {
+    font-size: 16px; /* prevents zoom-in on iPhone */
+    padding: 12px 14px;
+  }
+
+  .transcript {
+    padding: 14px;
+    font-size: 15px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+}
+
+@media (max-width: 640px) {
+  .app {
+    padding: 8px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .chapter-label {
+    font-size: 16px;
+  }
+
+  .details {
+    padding: 14px;
+  }
+
+  .details h2 {
+    font-size: 26px;
+  }
+
+  .summary {
+    font-size: 16px;
+  }
+
+  .quote {
+    font-size: 17px;
+  }
+
+  .modal-title {
+    font-size: 24px;
+  }
+
+  .transcript {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  .title {
+    font-size: 20px;
+  }
+
+  .details h2 {
+    font-size: 22px;
+  }
+
+  .summary {
+    font-size: 15px;
+  }
+
+  .quote {
+    font-size: 16px;
+  }
+
+  .btn {
+    font-size: 13px;
+    padding: 11px 12px;
+  }
+
+  .chip {
+    font-size: 11px;
+  }
+}
+    
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="title-wrap">
+        <h1 class="title" id="eventTitle">Загрузка...</h1>
+        <div class="subtitle">Навигация по главам аудиозаписи</div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="themeBtn" type="button">🌙 Тёмная тема</button>
+        <button class="btn primary" id="transcriptBtn" type="button">📜 Транскрипт</button>
+      </div>
+    </header>
+
+    <section class="playerbar">
+      <div class="playerbar-top">
+        <div class="player-label">Аудиофайл</div>
+        <div class="pill" id="audioFileLabel">Audio</div>
+      </div>
+      <audio id="audioPlayer" controls preload="metadata">
+        <source src="input.m4a" type="audio/mp4" />
+        Ваш браузер не поддерживает аудио.
+      </audio>
+    </section>
+
+    <main class="main">
+      <aside class="left-panel">
+        <div class="left-header">
+          <h2 class="left-title">Главы</h2>
+          <div class="left-subtitle">Прокручивается только эта колонка</div>
+        </div>
+        <div class="chapters-list" id="chaptersList"></div>
+      </aside>
+
+      <section class="right-panel">
+        <div class="details" id="chapterDetails">
+          <div class="empty">Загрузка данных...</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal" id="transcriptModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Полный транскрипт</h3>
+        <div class="modal-controls">
+          <button class="btn" id="closeTranscriptBtn" type="button">Закрыть</button>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <input
+          class="search-input"
+          id="transcriptSearch"
+          type="text"
+          placeholder="Поиск по транскрипту..."
+        />
+      </div>
+      <div class="transcript" id="transcriptContent">Загрузка...</div>
+    </div>
+  </div>
+
+
+
+
+
+<script>
+function normalizeForSearch(text) {
+  return String(text || "")
+    .toLowerCase()
+    .replace(/[«»"“”„‟']/g, "")
+    .replace(/[.,!?;:()[\]{}<>/\\|@#$%^&*_+=~`…]/g, " ")
+    .replace(/[–—-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function buildNormalizedMap(rawText) {
+  const raw = String(rawText || "");
+  let normalized = "";
+  const map = [];
+  let prevSpace = false;
+
+  for (let i = 0; i < raw.length; i++) {
+    let ch = raw[i].toLowerCase();
+
+    if (/[«»"“”„‟']/u.test(ch)) continue;
+
+    if (/[.,!?;:()[\]{}<>/\\|@#$%^&*_+=~`…]/u.test(ch)) {
+      ch = " ";
+    } else if (/[–—-]/u.test(ch)) {
+      ch = " ";
+    }
+
+    if (/\s/u.test(ch)) ch = " ";
+
+    if (ch === " ") {
+      if (normalized.length === 0 || prevSpace) continue;
+      prevSpace = true;
+      normalized += ch;
+      map.push(i);
+    } else {
+      prevSpace = false;
+      normalized += ch;
+      map.push(i);
+    }
+  }
+
+  if (normalized.endsWith(" ")) {
+    normalized = normalized.slice(0, -1);
+    map.pop();
+  }
+
+  return { normalized, map, raw };
+}
+
+function findExactNormalizedMatch(rawText, queryText) {
+  const q = normalizeForSearch(queryText);
+  if (!q) return null;
+
+  const { normalized, map, raw } = buildNormalizedMap(rawText);
+  const idx = normalized.indexOf(q);
+  if (idx === -1) return null;
+
+  const rawStart = map[idx];
+  const rawEnd = map[idx + q.length - 1];
+  if (rawStart == null || rawEnd == null) return null;
+
+  return {
+    start: rawStart,
+    end: rawEnd + 1,
+    text: raw.slice(rawStart, rawEnd + 1),
+    method: "exact"
+  };
+}
+
+function levenshtein(a, b) {
+  const m = a.length;
+  const n = b.length;
+  const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,
+        dp[i][j - 1] + 1,
+        dp[i - 1][j - 1] + cost
+      );
+    }
+  }
+  return dp[m][n];
+}
+
+function wordsSimilar(a, b) {
+  if (a === b) return true;
+  if (!a || !b) return false;
+  const maxLen = Math.max(a.length, b.length);
+  if (maxLen <= 3) return a === b;
+  const dist = levenshtein(a, b);
+  return dist <= Math.max(1, Math.floor(maxLen * 0.22));
+}
+
+function tokenizeWithMap(rawText) {
+  const tokens = [];
+  const regex = /[^\s«»"“”„‟'.,!?;:()[\]{}<>/\\|@#$%^&*_+=~`…–—-]+/gu;
+  let match;
+
+  while ((match = regex.exec(rawText)) !== null) {
+    const rawWord = match[0];
+    const normWord = normalizeForSearch(rawWord);
+    if (!normWord) continue;
+
+    tokens.push({
+      raw: rawWord,
+      norm: normWord,
+      start: match.index,
+      end: match.index + rawWord.length
+    });
+  }
+
+  return tokens;
+}
+
+function scoreWindow(queryWords, windowWords) {
+  if (!queryWords.length || !windowWords.length) return -Infinity;
+
+  let matched = 0;
+  let strongMatched = 0;
+  let totalDistance = 0;
+
+  for (let i = 0; i < queryWords.length; i++) {
+    const q = queryWords[i];
+    const w = windowWords[i] || "";
+    const dist = levenshtein(q, w);
+    const maxLen = Math.max(q.length, w.length, 1);
+    const ratio = dist / maxLen;
+
+    if (wordsSimilar(q, w)) {
+      matched += 1;
+      if (ratio <= 0.12) strongMatched += 1;
+    }
+    totalDistance += ratio;
+  }
+
+  const coverage = matched / queryWords.length;
+  const precision = matched / Math.max(windowWords.length, 1);
+  const avgDistance = totalDistance / queryWords.length;
+
+  return coverage * 100 + precision * 30 + strongMatched * 2 - avgDistance * 25;
+}
+
+function findFuzzyTranscriptMatch(rawText, queryText) {
+  const queryNorm = normalizeForSearch(queryText);
+  if (!queryNorm) return null;
+
+  const queryWords = queryNorm.split(" ").filter(Boolean);
+  const tokens = tokenizeWithMap(rawText);
+  if (!queryWords.length || !tokens.length) return null;
+
+  let best = null;
+  const minWindow = Math.max(1, queryWords.length - 3);
+  const maxWindow = Math.min(tokens.length, queryWords.length + 5);
+
+  for (let start = 0; start < tokens.length; start++) {
+    for (let len = minWindow; len <= maxWindow; len++) {
+      const end = start + len;
+      if (end > tokens.length) break;
+
+      const window = tokens.slice(start, end);
+      const windowWords = window.map(t => t.norm);
+      const score = scoreWindow(queryWords, windowWords);
+
+      if (!best || score > best.score) {
+        best = {
+          score,
+          start: window[0].start,
+          end: window[window.length - 1].end,
+          text: rawText.slice(window[0].start, window[window.length - 1].end),
+          method: "fuzzy"
+        };
+      }
+    }
+  }
+
+  if (!best || best.score < 45) return null;
+  return best;
+}
+
+function parseSrtBlocks(rawText) {
+  const text = String(rawText || "").replace(/\r/g, "");
+  const chunks = text.split(/\n\s*\n/);
+  const blocks = [];
+
+  for (const chunk of chunks) {
+    const lines = chunk.split("\n").filter(Boolean);
+    if (lines.length < 2) continue;
+
+    let idx = 0;
+    let blockId = null;
+
+    if (/^\d+$/.test(lines[0].trim())) {
+      blockId = lines[0].trim();
+      idx = 1;
+    }
+
+    if (!lines[idx]) continue;
+
+    const timeMatch = lines[idx].match(
+      /(\d{2}:\d{2}:\d{2},\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2},\d{3})/
+    );
+    if (!timeMatch) continue;
+
+    const start = timeMatch[1];
+    const end = timeMatch[2];
+    const textLines = lines.slice(idx + 1);
+    const blockText = textLines.join(" ").trim();
+    if (!blockText) continue;
+
+    blocks.push({
+      id: blockId,
+      start,
+      end,
+      startSec: srtTimeToSeconds(start),
+      endSec: srtTimeToSeconds(end),
+      text: blockText,
+      rawChunk: chunk
+    });
+  }
+
+  return blocks;
+}
+
+function getTranscriptRangeForChapter(chapter) {
+  if (!chapter || !transcriptBlocks.length) return null;
+
+  const startSec = srtTimeToSeconds(chapter.start);
+  const endSec = srtTimeToSeconds(chapter.end);
+
+  const blocks = transcriptBlocks.filter(
+    b => b.startSec >= startSec && b.endSec <= endSec
+  );
+  if (!blocks.length) return null;
+
+  const start = transcriptRaw.indexOf(blocks[0].rawChunk);
+  const lastBlock = blocks[blocks.length - 1];
+  const end = transcriptRaw.indexOf(lastBlock.rawChunk) + lastBlock.rawChunk.length;
+
+  if (start < 0 || end <= start) return null;
+
+  return {
+    start,
+    end,
+    text: transcriptRaw.slice(start, end),
+    blocks
+  };
+}
+
+function findBestTranscriptMatch(queryText, chapter = null) {
+  if (!transcriptRaw || !queryText || !queryText.trim()) return null;
+
+  const candidates = [];
+
+  const chapterRange = chapter ? getTranscriptRangeForChapter(chapter) : null;
+  if (chapterRange?.text) {
+    candidates.push({
+      scope: "chapter",
+      type: "exact",
+      rawText: chapterRange.text,
+      offset: chapterRange.start
+    });
+  }
+
+  candidates.push({
+    scope: "global",
+    type: "exact",
+    rawText: transcriptRaw,
+    offset: 0
+  });
+
+  if (chapterRange?.text) {
+    candidates.push({
+      scope: "chapter",
+      type: "fuzzy",
+      rawText: chapterRange.text,
+      offset: chapterRange.start
+    });
+  }
+
+  candidates.push({
+    scope: "global",
+    type: "fuzzy",
+    rawText: transcriptRaw,
+    offset: 0
+  });
+
+  for (const candidate of candidates) {
+    let match = null;
+
+    if (candidate.type === "exact") {
+      match = findExactNormalizedMatch(candidate.rawText, queryText);
+    } else {
+      match = findFuzzyTranscriptMatch(candidate.rawText, queryText);
+    }
+
+    if (match) {
+      return {
+        start: candidate.offset + match.start,
+        end: candidate.offset + match.end,
+        text: transcriptRaw.slice(candidate.offset + match.start, candidate.offset + match.end),
+        source: candidate.scope,
+        method: candidate.type
+      };
+    }
+  }
+
+  return null;
+}
+</script>
+
+
+
+  <script>
+    const audio = document.getElementById("audioPlayer");
+    const chaptersList = document.getElementById("chaptersList");
+    const chapterDetails = document.getElementById("chapterDetails");
+    const eventTitle = document.getElementById("eventTitle");
+    const themeBtn = document.getElementById("themeBtn");
+    const transcriptBtn = document.getElementById("transcriptBtn");
+    const transcriptModal = document.getElementById("transcriptModal");
+    const transcriptContent = document.getElementById("transcriptContent");
+    const closeTranscriptBtn = document.getElementById("closeTranscriptBtn");
+    const transcriptSearch = document.getElementById("transcriptSearch");
+
+
+
+function getQueryParam(name) {
+  const url = new URL(window.location.href);
+  return url.searchParams.get(name);
+}
+
+function safeLocalFile(paramValue, fallback) {
+  const value = (paramValue || "").trim();
+  if (!value) return fallback;
+
+  // block absolute/external URLs and suspicious schemes
+  if (
+    value.startsWith("http://") ||
+    value.startsWith("https://") ||
+    value.startsWith("//") ||
+    value.startsWith("javascript:") ||
+    value.startsWith("data:")
+  ) {
+    console.warn("Blocked external or unsafe URL:", value);
+    return fallback;
+  }
+console.info(value);
+  return value;
+}
+
+const chaptersFile = safeLocalFile(getQueryParam("chapters"), "chapters.json");
+const audioFile = safeLocalFile(getQueryParam("audio"), "input.m4a");
+const transcriptFile = safeLocalFile(getQueryParam("transcript"), "transcript.srt");
+
+
+const audioSource = audio.querySelector("source");
+if (audioSource) {
+  audioSource.src = audioFile;
+}
+audio.load();
+
+
+
+    let chaptersData = null;
+    let activeIndex = -1;
+    let transcriptRaw = "";
+
+    function escapeHtml(str) {
+      return String(str ?? "").replace(/[&<>"']/g, m => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[m]);
+    }
+
+    function srtTimeToSeconds(srtTime) {
+      const [hms, ms] = srtTime.split(",");
+      const [hh, mm, ss] = hms.split(":").map(Number);
+      return hh * 3600 + mm * 60 + ss + Number(ms) / 1000;
+    }
+
+    function applyTheme(theme) {
+      document.body.classList.toggle("dark", theme === "dark");
+      themeBtn.textContent = theme === "dark" ? "☀️ Светлая тема" : "🌙 Тёмная тема";
+      localStorage.setItem("theme", theme);
+    }
+
+    function initTheme() {
+      const saved = localStorage.getItem("theme");
+      applyTheme(saved === "dark" ? "dark" : "light");
+    }
+
+
+
+let transcriptBlocks = [];
+let currentChapterForTranscriptSearch = null;
+
+
+function openTranscriptWithQuote(quoteText, chapter = null) {
+  transcriptModal.classList.add("open");
+  transcriptModal.setAttribute("aria-hidden", "false");
+
+  if (!transcriptRaw) {
+    transcriptContent.textContent = "Загрузка...";
+    fetch(transcriptFile)
+      .then(r => {
+        if (!r.ok) throw new Error("Не удалось загрузить " + transcriptFile);
+        return r.text();
+      })
+      .then(text => {
+        transcriptRaw = text;
+        transcriptBlocks = parseSrtBlocks(text);
+        highlightQuoteInTranscript(quoteText, chapter);
+      })
+      .catch(err => {
+        transcriptContent.textContent = err.message;
+      });
+    return;
+  }
+
+  highlightQuoteInTranscript(quoteText, chapter);
+}
+
+
+
+
+
+
+function highlightQuoteInTranscript(quoteText, chapter = null) {
+  transcriptSearch.value = "";
+
+  if (!transcriptRaw) {
+    transcriptContent.textContent = "Загрузка...";
+    return;
+  }
+
+  const match = findBestTranscriptMatch(quoteText, chapter);
+
+  if (!match) {
+    transcriptContent.textContent = transcriptRaw;
+    return;
+  }
+
+  const before = escapeHtml(transcriptRaw.slice(0, match.start));
+  const found = escapeHtml(transcriptRaw.slice(match.start, match.end));
+  const after = escapeHtml(transcriptRaw.slice(match.end));
+
+  transcriptContent.innerHTML = `${before}<mark id="quoteMatch">${found}</mark>${after}`;
+
+  requestAnimationFrame(() => {
+    document.getElementById("quoteMatch")?.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function findNormalizedMatch(rawText, query) {
+  const normQuery = normalizeForSearch(query);
+  if (!normQuery) return null;
+
+  const { normalized, map, raw } = buildNormalizedMap(rawText);
+  const idx = normalized.indexOf(normQuery);
+  if (idx === -1) return null;
+
+  const rawStart = map[idx];
+  const rawEnd = map[idx + normQuery.length - 1];
+
+  if (rawStart == null || rawEnd == null) return null;
+
+  return {
+    start: rawStart,
+    end: rawEnd + 1,
+    raw
+  };
+}
+
+
+
+
+
+
+function renderDetails(chapter, index) {
+currentChapterForTranscriptSearch = chapter;
+  chapterDetails.innerHTML = `
+    <div class="meta-row">
+      <div class="chip">Глава ${index + 1}</div>
+      <div class="chip">${escapeHtml(chapter.start)} → ${escapeHtml(chapter.end)}</div>
+    </div>
+
+    <h2>${escapeHtml(chapter.label)}</h2>
+
+    <div class="time-range">
+      ${escapeHtml(chapter.start)} → ${escapeHtml(chapter.end)}
+    </div>
+
+    <div class="summary">
+      ${escapeHtml(chapter.summary || "")}
+    </div>
+
+    <div class="quote-box">
+      <p class="quote clickable-quote" id="chapterQuote" title="Показать в транскрипте">
+        "${escapeHtml(chapter.quote || "")}"
+      </p>
+      <div class="speaker">${escapeHtml(chapter.speaker || "")}</div>
+    </div>
+
+    <div class="details-actions">
+      <button class="btn primary" id="playHereBtn" type="button">▶ Воспроизвести с этого места</button>
+      <button class="btn" id="copyTimeBtn" type="button">Скопировать таймкод</button>
+    </div>
+  `;
+
+  const playBtn = document.getElementById("playHereBtn");
+  const copyBtn = document.getElementById("copyTimeBtn");
+  const quoteEl = document.getElementById("chapterQuote");
+
+  if (playBtn) {
+    playBtn.addEventListener("click", () => {
+      audio.currentTime = srtTimeToSeconds(chapter.start);
+      audio.play().catch(() => {});
+    });
+  }
+
+  if (copyBtn) {
+    copyBtn.addEventListener("click", async () => {
+      const text = `${chapter.start} — ${chapter.label}`;
+      try {
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = "Скопировано";
+        setTimeout(() => {
+          copyBtn.textContent = "Скопировать таймкод";
+        }, 1200);
+      } catch (e) {
+        copyBtn.textContent = "Не удалось скопировать";
+        setTimeout(() => {
+          copyBtn.textContent = "Скопировать таймкод";
+        }, 1200);
+      }
+    });
+  }
+
+  if (quoteEl) {
+    quoteEl.addEventListener("click", () => {
+openTranscriptWithQuote(chapter.quote || "", chapter);
+    });
+  }
+}
+
+
+    function setActiveButton(index) {
+      const items = document.querySelectorAll(".chapter");
+      items.forEach((el, i) => el.classList.toggle("active", i === index));
+      activeIndex = index;
+    }
+
+    function jumpToChapter(index, autoplay = true) {
+      if (!chaptersData || !chaptersData.chapters[index]) return;
+      const chapter = chaptersData.chapters[index];
+      renderDetails(chapter, index);
+      setActiveButton(index);
+      audio.currentTime = srtTimeToSeconds(chapter.start);
+      if (autoplay) {
+        audio.play().catch(() => {});
+      }
+    }
+
+    function buildChapters(data) {
+      chaptersList.innerHTML = "";
+      data.chapters.forEach((chapter, index) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "chapter";
+        btn.innerHTML = `
+          <div class="chapter-num">${index + 1}.</div>
+          <div class="chapter-label">${escapeHtml(chapter.label)}</div>
+          <div class="chapter-time">${escapeHtml(chapter.start)}</div>
+        `;
+        btn.addEventListener("click", () => jumpToChapter(index, true));
+        chaptersList.appendChild(btn);
+      });
+
+      if (data.chapters.length > 0) {
+        renderDetails(data.chapters[0], 0);
+        setActiveButton(0);
+      }
+    }
+
+let isUserSeeking = false;
+
+audio.addEventListener("seeking", () => {
+  isUserSeeking = true;
+});
+
+audio.addEventListener("seeked", () => {
+  isUserSeeking = false;
+});
+
+audio.addEventListener("timeupdate", () => {
+  if (isUserSeeking) return;
+  if (!chaptersData) return;
+
+  const t = audio.currentTime;
+
+  for (let i = 0; i < chaptersData.chapters.length; i++) {
+    const ch = chaptersData.chapters[i];
+    const start = srtTimeToSeconds(ch.start);
+    const end = srtTimeToSeconds(ch.end);
+
+    if (t >= start && t < end) {
+      if (activeIndex !== i) {
+        renderDetails(ch, i);
+        setActiveButton(i);
+      }
+      break;
+    }
+  }
+});
+
+    function openTranscript() {
+      transcriptModal.classList.add("open");
+      transcriptModal.setAttribute("aria-hidden", "false");
+      transcriptSearch.focus();
+
+      if (transcriptRaw) return;
+
+      fetch(transcriptFile)
+    .then(r => {
+      if (!r.ok) throw new Error("Не удалось загрузить " + transcriptFile);
+      return r.text();
+    })
+    .then(text => {
+      transcriptRaw = text;
+      transcriptBlocks = parseSrtBlocks(text);
+      transcriptContent.textContent = text;
+    })
+    .catch(err => {
+      transcriptContent.textContent = err.message;
+    });
+    }
+
+    function closeTranscript() {
+      transcriptModal.classList.remove("open");
+      transcriptModal.setAttribute("aria-hidden", "true");
+    }
+
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+
+function renderTranscriptWithHighlight() {
+  const q = transcriptSearch.value.trim();
+
+  if (!transcriptRaw) {
+    transcriptContent.textContent = "Загрузка...";
+    return;
+  }
+
+  if (!q) {
+    transcriptContent.textContent = transcriptRaw;
+    return;
+  }
+
+  const match = findNormalizedMatch(transcriptRaw, q);
+
+  if (!match) {
+    transcriptContent.textContent = transcriptRaw;
+    return;
+  }
+
+  const before = escapeHtml(match.raw.slice(0, match.start));
+  const found = escapeHtml(match.raw.slice(match.start, match.end));
+  const after = escapeHtml(match.raw.slice(match.end));
+
+  transcriptContent.innerHTML = `${before}<mark id="transcriptFound">${found}</mark>${after}`;
+
+  requestAnimationFrame(() => {
+    document.getElementById("transcriptFound")?.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  });
+}
+
+
+    themeBtn.addEventListener("click", () => {
+      const isDark = document.body.classList.contains("dark");
+      applyTheme(isDark ? "light" : "dark");
+    });
+
+    transcriptBtn.addEventListener("click", openTranscript);
+    closeTranscriptBtn.addEventListener("click", closeTranscript);
+
+    transcriptModal.addEventListener("click", (e) => {
+      if (e.target === transcriptModal) closeTranscript();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && transcriptModal.classList.contains("open")) {
+        closeTranscript();
+      }
+    });
+
+    transcriptSearch.addEventListener("input", renderTranscriptWithHighlight);
+
+function getQueryParam(name) {
+  const url = new URL(window.location.href);
+  return url.searchParams.get(name);
+}
+
+// 🔥 decide which chapters file to load
+//const chaptersFile = getQueryParam("chapters") || "chapters.json";
+
+console.log("Loading chapters from:", chaptersFile);
+
+fetch(chaptersFile)
+  .then(r => {
+    if (!r.ok) {
+      throw new Error("Не удалось загрузить " + chaptersFile);
+    }
+    return r.json();
+  })
+  .then(data => {
+    if (!data.chapters || !Array.isArray(data.chapters) || data.chapters.length === 0) {
+      throw new Error("Некорректный формат файла глав");
+    }
+
+    chaptersData = data;
+    eventTitle.textContent = data.title || "Главы аудиозаписи";
+    buildChapters(data);
+  })
+  .catch(err => {
+    eventTitle.textContent = "Ошибка загрузки";
+    chapterDetails.innerHTML = `
+      <div class="empty">
+        Ошибка: ${escapeHtml(err.message)}
+      </div>
+    `;
+  });
+
+    initTheme();
+  </script>
+</body>
+</html>

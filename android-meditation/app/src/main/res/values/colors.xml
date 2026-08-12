@@ -1,0 +1,11 @@
+<resources>
+    <color name="ink">#1E3128</color>
+    <color name="muted_ink">#5B6D62</color>
+    <color name="sage">#3F6B55</color>
+    <color name="deep_sage">#274A39</color>
+    <color name="mint">#CFE5D6</color>
+    <color name="mist">#F4F7F1</color>
+    <color name="warm_white">#FCFDF9</color>
+    <color name="card_white">#EAF3EC</color>
+    <color name="line">#B5CCBC</color>
+</resources>
