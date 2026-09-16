@@ -1,0 +1,6 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Custom Agent Studio</title><link rel="stylesheet" href="style.css"></head>
+<body><header><div><h1>Custom Agent</h1><span>Visual AI workflow studio</span></div><div class="actions"><input id="runInput" placeholder="Workflow input"><button id="save">Save</button><button id="run" class="primary">▶ Run</button></div></header>
+<main><aside><h2>Nodes</h2><button data-add="input">＋ Input</button><button data-add="ai">✦ AI model</button><button data-add="processor">⚙ Processor</button><button data-add="router">⑂ Router</button><button data-add="output">⇥ Output</button><hr><p class="hint">Drag nodes. Click an output dot, then an input dot to connect. Select a node to edit it.</p><button id="reloadPlugins">Reload JAR plugins</button></aside>
+<section id="viewport"><svg id="wires"></svg><div id="canvas"></div><div id="empty">Add a node to begin</div></section>
+<aside id="inspector"><h2>Inspector</h2><div id="form"><p class="hint">Select a node.</p></div></aside></main>
+<div id="toast"></div><script src="app.js"></script></body></html>
